@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RESONANCE | Espejo Neuronal Experimental</title>
+    <meta name="description" content="Protocolo avanzado de evaluación psicométrica y arquitectura mental por Benzanox Studios.">
+    
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="RESONANCE - Benzanox Studios">
+    <meta property="og:description" content="Descifra la arquitectura invisible de tu mente con IA avanzada.">
+    <meta property="og:image" content="https://res.cloudinary.com/dz03v9m66/image/upload/v1/assets/resonance-preview.jpg">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --res-primary: #a855f7;
+            --res-secondary: #6366f1;
+            --bg-color: #020202;
+            --text-color: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.02);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --neon-lila: rgba(168, 85, 247, 0.25);
+        }
+
+        * {
+            cursor: auto;
+        }
+
+        button, a, select, input[type="checkbox"], .cursor-pointer {
+            cursor: pointer !important;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            margin: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Capa de luz neón lila ambiental */
+        .neon-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .neon-blob {
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle at center, var(--neon-lila) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: pulse-neon 15s infinite alternate ease-in-out;
+        }
+
+        .blob-1 { top: -200px; left: -200px; background: radial-gradient(circle at center, rgba(168, 85, 247, 0.3) 0%, transparent 70%); }
+        .blob-2 { bottom: -300px; right: -200px; background: radial-gradient(circle at center, rgba(99, 102, 241, 0.2) 0%, transparent 70%); animation-delay: -5s; }
+        .blob-3 { top: 50%; left: 50%; transform: translate(-50%, -50%); width: 1000px; height: 1000px; opacity: 0.2; }
+
+        @keyframes pulse-neon {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.4; }
+            50% { transform: scale(1.2) translate(50px, 30px); opacity: 0.7; }
+            100% { transform: scale(0.9) translate(-30px, 50px); opacity: 0.4; }
+        }
+
+        .top-aura-glow {
+            position: fixed;
+            top: -250px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180%;
+            height: 700px;
+            background: radial-gradient(
+                circle at center, 
+                rgba(168, 85, 247, 0.2) 0%, 
+                rgba(99, 102, 241, 0.1) 40%, 
+                transparent 75%
+            );
+            z-index: 5;
+            pointer-events: none;
+            filter: blur(120px);
+            opacity: 0.9;
+        }
+
+        #cosmos-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .resonance-logo {
+            font-size: clamp(3.5rem, 12vw, 8rem);
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            letter-spacing: 0.2em;
+            background: linear-gradient(to bottom, #fff 40%, rgba(255,255,255,0.2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 10;
+            text-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.015);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(168, 85, 247, 0.1);
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(168, 85, 247, 0.3); border-radius: 10px; }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^1.37.0",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+  }
+}
+</script>
+</head>
+<body>
+    <div class="neon-background">
+        <div class="neon-blob blob-1"></div>
+        <div class="neon-blob blob-2"></div>
+        <div class="neon-blob blob-3"></div>
+    </div>
+    <div class="top-aura-glow"></div>
+    <canvas id="cosmos-canvas"></canvas>
+    <div id="root"></div>
+
+    <script>
+        const canvas = document.getElementById('cosmos-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let scrollY = 0;
+        const stars = [];
+        const starCount = 300;
+
+        class Star {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.z = Math.random() * width;
+                this.size = Math.random() * 1.5 + 0.1;
+                this.opacity = Math.random() * 0.5;
+                this.color = Math.random() > 0.9 ? '#a855f7' : '#ffffff';
+            }
+            update() {
+                this.z -= 0.3;
+                if (this.z <= 0) {
+                    this.z = width;
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                }
+                
+                let px = (this.x - width/2) * (width/this.z);
+                let py = (this.y - height/2) * (width/this.z);
+                
+                this.drawX = px + width/2;
+                this.drawY = py + height/2 - (scrollY * 0.05);
+            }
+            draw() {
+                let s = this.size * (width/this.z);
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity * (1 - this.z/width);
+                ctx.beginPath();
+                ctx.arc(this.drawX, this.drawY, s, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            stars.length = 0;
+            for (let i = 0; i < starCount; i++) stars.push(new Star());
+        }
+
+        function loop() {
+            ctx.fillStyle = '#020202';
+            ctx.fillRect(0, 0, width, height);
+            stars.forEach(s => { s.update(); s.draw(); });
+            requestAnimationFrame(loop);
+        }
+
+        window.addEventListener('resize', init);
+        window.addEventListener('scroll', () => scrollY = window.pageYOffset);
+
+        init();
+        loop();
+    </script>
+    <script type="module" src="./index.tsx"></script>
+</body>
+</html>
